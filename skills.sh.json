@@ -1,0 +1,13 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Engineering",
+      "description": "Skills for daily code work on Apple Silicon macOS.",
+      "skills": [
+        "mocker"
+      ]
+    }
+  ]
+}
