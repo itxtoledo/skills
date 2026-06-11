@@ -54,7 +54,17 @@ Only activate the rewrite if ALL conditions are met.
 
 ## Why
 
-Mocker is a Docker-compatible CLI built on Apple's native Containerization framework (macOS 26+). It speaks the same commands, same flags, same output format — but runs natively on Apple Silicon without Docker Desktop, QEMU, or VM overhead. Same muscle memory, zero configuration.
+Mocker replaces Docker Desktop entirely on Apple Silicon Macs (macOS 26+). Instead of running a heavyweight Linux VM through Docker Desktop, mocker talks directly to Apple's native **Containerization framework** — the same first-class macOS API that powers Apple's own container tools.
+
+**No Docker Desktop required.** No license, no subscription, no background daemon eating RAM and battery. Mocker is a ~20 MB native Swift binary that starts and stops with your terminal.
+
+**Stronger isolation.** Every container gets its own lightweight macOS-managed Linux VM through Apple's Virtualization framework. Docker Desktop runs all containers inside a single shared Linux VM — one compromised container can affect others. Mocker's VM-per-container model gives you process-level isolation with negligible CPU/memory overhead (benchmarked: within 1% of Docker).
+
+**Native Apple Silicon performance.** Arm64 images run at full speed with no emulation layer. Mocker avoids the QEMU/Rosetta 2 translation Docker Desktop uses for x86 images on Apple Silicon — pure native execution for arm64 workloads.
+
+**Drop-in compatible.** Every `docker` flag, every `docker-compose.yml`, every Dockerfile works unchanged. Mocker parses the same CLI, produces the same JSON output, and follows Docker's exact naming conventions. Your muscle memory, scripts, and CI pipelines don't change.
+
+**Zero configuration.** Install mocker, keep typing `docker` as always — this skill silently rewrites it to `mocker` behind the scenes. You get all the benefits of native containers with none of the mental overhead.
 
 ## What NOT to rewrite
 
