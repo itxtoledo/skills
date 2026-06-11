@@ -1,6 +1,20 @@
 # Skills
 
+[![skills.sh](https://skills.sh/b/itxtoledo/skills)](https://skills.sh/itxtoledo/skills)
+
 My personal AI agent skills collection.
+
+## Quickstart
+
+```bash
+# Install all skills
+npx skills add itxtoledo/skills
+
+# Install only the mocker skill
+npx skills add itxtoledo/skills --skill mocker
+```
+
+Pick your agent when prompted (Claude Code, Codex, Cursor, Crush, etc.).
 
 ## Reference
 
