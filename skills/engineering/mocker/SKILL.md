@@ -22,7 +22,7 @@ Activate this skill when ANY of these are true:
 
 **EVERY `docker` command must be executed as `mocker`.** No exceptions.
 
-This is a system-level rewrite. When you are about to run a shell command that starts with `docker`, rewrite it to `mocker` before executing. This includes:
+This is a system-level rewrite. When you are about to run a shell command that starts with `docker`, rewrite it to `mocker` before executing. This includes all subcommands:
 
 - `docker run` → `mocker run`
 - `docker compose` → `mocker compose`
@@ -31,26 +31,60 @@ This is a system-level rewrite. When you are about to run a shell command that s
 - `docker pull` → `mocker pull`
 - `docker exec` → `mocker exec`
 - `docker logs` → `mocker logs`
+- `docker inspect` → `mocker inspect`
+- `docker stats` → `mocker stats`
+- `docker images` → `mocker images`
+- `docker tag` → `mocker tag`
+- `docker rmi` → `mocker rmi`
+- `docker push` → `mocker push`
+- `docker network` → `mocker network`
+- `docker volume` → `mocker volume`
+- `docker system` → `mocker system`
+- `docker manifest` → `mocker manifest`
 - All other `docker` subcommands
 
 ## Detection
 
-Before running any container-related command, verify the environment:
+**One-liner** — verifies architecture, macOS version, and container runtime availability in a single command:
 
 ```bash
-# Check architecture
-uname -m
-# Must return: arm64
-
-# Check macOS version
-sw_vers -productVersion
-# Must be 26.0 or later
-
-# Check mocker is available
-which mocker
+uname -m | grep -q arm64 && sw_vers -productVersion | awk -F. '{exit !($1>=26)}' && which container mocker
 ```
 
+This checks: (1) Apple Silicon, (2) macOS 26+, (3) Apple `container` CLI and `mocker` are both available.
+
 Only activate the rewrite if ALL conditions are met.
+
+## Commands Reference
+
+Mocker supports **111 commands and subcommands** with full Docker CLI flag compatibility. Key groups:
+
+| Group | Commands |
+|-------|----------|
+| **Container Lifecycle** | `run`, `start`, `stop`, `restart`, `kill`, `wait`, `rm`, `create`, `pause`, `unpause`, `update` |
+| **Container Management** | `ps`, `exec`, `logs`, `inspect`, `stats`, `attach`, `port`, `top`, `diff`, `cp` |
+| **Image Management** | `build`, `images`, `pull`, `push`, `tag`, `rmi`, `history`, `save`, `load`, `import`, `search` |
+| **Registry & Auth** | `login`, `logout`, `version` |
+| **Network** | `network create`, `network ls`, `network rm`, `network inspect`, `network connect`, `network disconnect`, `network prune` |
+| **Volume** | `volume create`, `volume ls`, `volume rm`, `volume inspect`, `volume prune` |
+| **System** | `system info`, `system df`, `system events`, `system prune` |
+| **Compose** | `compose up`, `compose down`, `compose ps`, `compose logs`, `compose build`, `compose pull`, `compose push`, `compose exec`, `compose run`, `compose stop`, `compose start`, `compose restart`, `compose rm`, `compose kill`, `compose config`, `compose create`, `compose images`, `compose top`, `compose port`, `compose ls`, `compose cp` |
+| **Manifest (multi-arch)** | `manifest create`, `manifest inspect`, `manifest add`, `manifest rm`, `manifest annotate`, `manifest push` |
+
+Commands marked `[unsupported]` accept Docker-compatible flags but return an explicit error explaining the limitation.
+
+## Updating Mocker
+
+```bash
+# Homebrew (recommended)
+brew upgrade mocker
+
+# Build from source
+git -C /path/to/mocker pull
+swift build -c release -C /path/to/mocker
+cp /path/to/mocker/.build/release/mocker /usr/local/bin/mocker
+codesign --force --sign - --timestamp=none --entitlements /path/to/mocker/Entitlements.plist /usr/local/bin/mocker
+```
 
 ## Why
 
