@@ -73,17 +73,15 @@ Mocker supports **111 commands and subcommands** with full Docker CLI flag compa
 
 Commands marked `[unsupported]` accept Docker-compatible flags but return an explicit error explaining the limitation.
 
-## Updating Mocker
+## Installing & Updating Mocker
 
 ```bash
-# Homebrew (recommended)
-brew upgrade mocker
+# Install
+brew tap us/tap
+brew install mocker
 
-# Build from source
-git -C /path/to/mocker pull
-swift build -c release -C /path/to/mocker
-cp /path/to/mocker/.build/release/mocker /usr/local/bin/mocker
-codesign --force --sign - --timestamp=none --entitlements /path/to/mocker/Entitlements.plist /usr/local/bin/mocker
+# Update
+brew upgrade mocker
 ```
 
 ## Why
@@ -119,4 +117,3 @@ If mocker is not installed, inform the user:
 > brew tap us/tap
 > brew install mocker
 > ```
-> Or build from source: https://github.com/us/mocker
