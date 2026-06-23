@@ -73,6 +73,68 @@ Mocker supports **111 commands and subcommands** with full Docker CLI flag compa
 
 Commands marked `[unsupported]` accept Docker-compatible flags but return an explicit error explaining the limitation.
 
+## Compose Resource Limits (`deploy`)
+
+Mocker supports the `deploy` section in `docker-compose.yml` for resource limits and restart policies. Non-Swarm fields (`endpoint_mode`, `mode`, `replicas`, `placement`, `rollback_config`, `update_config`) are ignored — they only apply to multi-node Docker Swarm.
+
+### `deploy.resources.limits`
+
+```yaml
+services:
+  app:
+    deploy:
+      resources:
+        limits:
+          cpus: "2"       # → container CLI -c (integer ≥ 1)
+          memory: 512M    # → container CLI -m
+        reservations:
+          memory: 256M    # parsed only (soft limit — no API yet)
+```
+
+**Memory:**
+- Default when not set: **1 GiB** (Apple Containerization framework default)
+- Minimum: **200 MiB** (values below throw `minimum memory amount allowed is 200 MiB`)
+- Accepts: `K`, `M`, `G`, `T`, `P` suffixes (upper or lowercase). Examples: `512M`, `4G`, `4096M`, `1g`
+- Legacy top-level `mem_limit` also works; `deploy.resources.limits.memory` takes precedence
+
+**CPU:**
+- Apple's `container` CLI only accepts **integer** CPU count (`-c 2`), not Docker-style fractional shares
+- Mocker automatically **ceils** fractional values: `"0.50"` → `1`, `"1.5"` → `2`
+- Values that round to 0 are **dropped** (no `-c` flag passed)
+- Legacy top-level `cpus` also works; `deploy.resources.limits.cpus` takes precedence
+
+### `deploy.restart_policy`
+
+```yaml
+services:
+  app:
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+```
+
+**Condition mapping to mocker `restart`:**
+| `restart_policy.condition` | Mocker restart |
+|---|---|
+| `none` | `no` |
+| `any` | `always` |
+| `on-failure` | `on-failure` |
+
+`delay`, `max_attempts`, and `window` are parsed but not enforced (Apple Containerization framework does not expose these APIs). `deploy.restart_policy.condition` takes precedence over legacy top-level `restart`.
+
+### Other resource fields
+
+| Compose field | Support |
+|---|---|
+| `mem_reservation` | Parsed (soft limit, not enforced) |
+| `memswap_limit` | Parsed (not enforced) |
+| `shm_size` | ✅ Forwarded as `--shm-size` |
+| `pids_limit` | Parsed (not enforced) |
+| `deploy.resources.reservations.devices` | Not supported (no GPU/TPU passthrough in Apple CLI) |
+
 ## Installing & Updating Mocker
 
 ```bash
