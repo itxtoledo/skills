@@ -1,6 +1,7 @@
 {
   "name": "itxtoledo-skills",
   "skills": [
-    "./skills/engineering/mocker"
+    "./skills/engineering/mocker",
+    "./skills/engineering/apple-app-store-submission"
   ]
 }

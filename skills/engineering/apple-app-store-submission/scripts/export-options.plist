@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Template for `xcodebuild -exportArchive`.
+
+  Replace every <PLACEHOLDER>:
+    <TEAM_ID>      10-character Apple Developer Team ID
+    <bundle-id>    the app's bundle identifier
+    <profile name> the provisioning profile name printed by scripts/asc-signing.mjs
+
+  Validate before using:
+    plutil -lint export-options.plist
+
+  Notes:
+  - `destination: upload` sends the build straight to App Store Connect. Use
+    `export` instead to produce a local .ipa without uploading.
+  - `manageAppVersionAndBuildNumber: false` stops Xcode from rewriting the
+    version or build number, which would otherwise detach the build from the
+    version you prepared in App Store Connect.
+  - `signingStyle: manual` is required when using a keychain-based certificate
+    rather than Xcode's automatic signing.
+-->
+<plist version="1.0">
+<dict>
+  <key>method</key>
+  <string>app-store-connect</string>
+  <key>destination</key>
+  <string>upload</string>
+  <key>uploadSymbols</key>
+  <true/>
+  <key>manageAppVersionAndBuildNumber</key>
+  <false/>
+  <key>teamID</key>
+  <string>&lt;TEAM_ID&gt;</string>
+  <key>signingStyle</key>
+  <string>manual</string>
+  <key>signingCertificate</key>
+  <string>iPhone Distribution</string>
+  <key>provisioningProfiles</key>
+  <dict>
+    <key>&lt;bundle-id&gt;</key>
+    <string>&lt;profile name&gt;</string>
+  </dict>
+</dict>
+</plist>
