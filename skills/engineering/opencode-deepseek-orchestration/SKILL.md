@@ -35,7 +35,7 @@ mkdir -p "$SCRATCH/ping" && cd "$SCRATCH/ping" && \
 ## 2. Invocation, and the `PWD` gotcha
 
 ```bash
-cd "$REPO" && PWD="$REPO" opencode run -m opencode-go/deepseek-v4.1-flash \
+cd "$REPO" && PWD="$REPO" opencode run --standalone -m opencode-go/deepseek-v4.1-flash \
   "$(cat "$BRIEFS/common.md" "$BRIEFS/t3.md")" > "$BRIEFS/t3.log" 2>&1
 echo "exit $?"; tail -60 "$BRIEFS/t3.log"
 ```
@@ -44,6 +44,14 @@ echo "exit $?"; tail -60 "$BRIEFS/t3.log"
   explicitly. If you `cd` from a wrapper that doesn't update `PWD`, the agent works in
   the wrong tree. In a sandbox setup that can mean it reads and edits files you meant to
   hide.
+- **Always pass `--standalone`.** Without it, `opencode run` attaches to the shared
+  background OpenCode service. If that service restarts its watchers (for example after
+  you add or move a skill under `~/.agents/skills`), the client can hang forever: 0%
+  CPU and an empty log. `--standalone` gives each run its own private server.
+- **Detect stalls; don't trust "still running".** A healthy run writes its log within
+  seconds. If the log size hasn't changed for ~5 minutes, kill that one PID (not every
+  opencode process: the user may have their own sessions) and re-run it. The script
+  does this automatically (`STALL_SECS`, default 300).
 - Run each agent as a **background** shell job, logging to a file, so several run in
   parallel and you are notified when each exits. Don't poll. Do your own review of
   finished tasks while the others run.
