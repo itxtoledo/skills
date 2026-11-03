@@ -7,7 +7,8 @@
       "description": "Skills for daily code work on Apple Silicon macOS.",
       "skills": [
         "mocker",
-        "apple-app-store-submission"
+        "apple-app-store-submission",
+        "opencode-deepseek-orchestration"
       ]
     }
   ]

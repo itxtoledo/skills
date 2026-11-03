@@ -2,6 +2,7 @@
   "name": "itxtoledo-skills",
   "skills": [
     "./skills/engineering/mocker",
-    "./skills/engineering/apple-app-store-submission"
+    "./skills/engineering/apple-app-store-submission",
+    "./skills/engineering/opencode-deepseek-orchestration"
   ]
 }
