@@ -3,6 +3,7 @@
   "skills": [
     "./skills/engineering/mocker",
     "./skills/engineering/apple-app-store-submission",
-    "./skills/engineering/opencode-deepseek-orchestration"
+    "./skills/engineering/opencode-deepseek-orchestration",
+    "./skills/engineering/git-merged-branch-cleanup"
   ]
 }
